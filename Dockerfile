@@ -7,13 +7,18 @@
 ################################
 FROM python:3.9.13-slim
 
-RUN pip config set global.index-url https://mirrors.aliyun.com/pypi/simple && pip install poetry==1.6.1 && poetry self add poetry-plugin-pypi-mirror
+RUN pip config set global.index-url https://mirrors.aliyun.com/pypi/simple \
+    && pip install poetry==1.6.1 \
+    && pip install playwright\
+    && playwright install chromium\
+    && poetry self add poetry-plugin-pypi-mirror
 
 COPY pyproject.toml poetry.lock /APP/
 
 WORKDIR /APP
 
-RUN export POETRY_PYPI_MIRROR_URL=https://mirrors.cloud.tencent.com/pypi/simple/ && poetry install && playwright install chrome
+RUN export POETRY_PYPI_MIRROR_URL=https://mirrors.cloud.tencent.com/pypi/simple/ \
+    && poetry install
 
 COPY . /APP/
 
